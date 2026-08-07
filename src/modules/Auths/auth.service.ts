@@ -112,7 +112,6 @@ export class AuthService {
   ) {
 
     const payload = verifyRefreshToken(data.refreshToken);
-    console.log("fffff");
 
     const refreshToken = await this.refreshTokenRepository.findByToken(data.refreshToken);
 

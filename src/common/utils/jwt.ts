@@ -14,7 +14,6 @@ if (!jwtSecret) {
 export function generateAccessToken(
   payload: JwtPayload
 ): string {
-  console.log(jwtSecret);
   return jwt.sign(payload, jwtSecret!, {
     expiresIn: "15m"
   });
@@ -65,7 +64,6 @@ export function verifyAccessToken(
 export function verifyRefreshToken(
   token: string
 ): JwtPayload {
-  console.log(jwtSecretRefresh)
   if (!jwtSecretRefresh) {
     throw new Error("JWT_SECRET is not configured");
   }
