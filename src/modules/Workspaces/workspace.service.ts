@@ -7,6 +7,7 @@ import { WorkspaceMemberRepository } from "./repository/workspace-member.reposit
 import { UserRepository } from "../Users/repository/user.repository";
 import { WorkspaceRole } from "../../common/enums/workspace-role.enum";
 import { UpdateWorkspaceDto } from "./dto/update-workspace.dto";
+import { AppError } from "../../common/errors/AppError";
 
 export class WorkspaceService {
 
@@ -32,9 +33,12 @@ export class WorkspaceService {
             );
 
         if (!user) {
-            throw new Error(
-                "User not found"
+
+            throw new AppError(
+                "User not found",
+                404
             );
+
         }
 
         const workspace =
@@ -58,6 +62,7 @@ export class WorkspaceService {
 
     }
 
+
     async getMyWorkspaces(
         userId: number
     ) {
@@ -67,6 +72,7 @@ export class WorkspaceService {
         );
 
     }
+
 
     async findWorkspaceById(
         workspaceId: number,
@@ -81,8 +87,9 @@ export class WorkspaceService {
 
         if (!workspace) {
 
-            throw new Error(
-                "Workspace not found"
+            throw new AppError(
+                "Workspace not found",
+                404
             );
 
         }
@@ -90,6 +97,7 @@ export class WorkspaceService {
         return workspace;
 
     }
+
 
     async updateWorkspace(
         workspaceId: number,
@@ -104,22 +112,34 @@ export class WorkspaceService {
 
         if (!workspace) {
 
-            throw new Error(
-                "Workspace not found"
+            throw new AppError(
+                "Workspace not found",
+                404
             );
 
         }
 
         const member =
-            await this.workspaceMemberRepository.findByUserIdAndWorkspaceId(
-                userId,
-                workspaceId
+            await this.workspaceMemberRepository
+                .findByUserIdAndWorkspaceId(
+                    userId,
+                    workspaceId
+                );
+
+        if (!member) {
+
+            throw new AppError(
+                "You are not a member of this workspace",
+                403
             );
 
-        if (!member || member.role !== "OWNER") {
+        }
 
-            throw new Error(
-                "Only workspace owner can update workspace"
+        if (member.role !== WorkspaceRole.OWNER) {
+
+            throw new AppError(
+                "Only workspace owner can update workspace",
+                403
             );
 
         }
@@ -133,6 +153,7 @@ export class WorkspaceService {
 
     }
 
+
     async deleteWorkspace(
         workspaceId: number,
         userId: number
@@ -145,8 +166,9 @@ export class WorkspaceService {
 
         if (!workspace) {
 
-            throw new Error(
-                "Workspace not found"
+            throw new AppError(
+                "Workspace not found",
+                404
             );
 
         }
@@ -158,10 +180,20 @@ export class WorkspaceService {
                     workspaceId
                 );
 
-        if (!member || member.role !== "OWNER") {
+        if (!member) {
 
-            throw new Error(
-                "Only workspace owner can delete workspace"
+            throw new AppError(
+                "You are not a member of this workspace",
+                403
+            );
+
+        }
+
+        if (member.role !== WorkspaceRole.OWNER) {
+
+            throw new AppError(
+                "Only workspace owner can delete workspace",
+                403
             );
 
         }

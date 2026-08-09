@@ -1,14 +1,22 @@
-import { Request, Response } from "express";
+import {
+    Request,
+    Response,
+    NextFunction
+} from "express";
+
 import { UserService } from "./user.service";
 
+
 export class UserController {
+
     private userService =
         new UserService();
 
 
     getProfile = async (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) => {
 
         try {
@@ -17,6 +25,7 @@ export class UserController {
                 await this.userService.getProfile(
                     req.user.id
                 );
+
 
             return res.status(200).json({
 
@@ -28,21 +37,17 @@ export class UserController {
 
         } catch (error) {
 
-            return res.status(404).json({
-
-                success: false,
-
-                message: (error as Error).message
-
-            });
+            next(error);
 
         }
 
     };
 
+
     updateProfile = async (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) => {
 
         try {
@@ -53,6 +58,7 @@ export class UserController {
                     req.body
                 );
 
+
             return res.status(200).json({
 
                 success: true,
@@ -63,13 +69,7 @@ export class UserController {
 
         } catch (error) {
 
-            return res.status(400).json({
-
-                success: false,
-
-                message: (error as Error).message
-
-            });
+            next(error);
 
         }
 

@@ -1,19 +1,13 @@
-import {
-    Request,
-    Response,
-    NextFunction
-} from "express";
+import { NextFunction, Request, Response } from "express";
 
-import { AuthService } from "./auth.service";
+import { WorkspaceMembersService } from "./workspace-members.service";
 
+export class WorkspaceMembersController {
 
-export class AuthController {
+    private workspaceMembersService =
+        new WorkspaceMembersService();
 
-    private authService =
-        new AuthService();
-
-
-    register = async (
+    addWorkspaceMember = async (
         req: Request,
         res: Response,
         next: NextFunction
@@ -22,10 +16,11 @@ export class AuthController {
         try {
 
             const result =
-                await this.authService.register(
+                await this.workspaceMembersService.addWorkspaceMember(
+                    req.user.id,
+                    Number(req.params.workspaceId),
                     req.body
                 );
-
 
             return res.status(201).json({
 
@@ -43,8 +38,7 @@ export class AuthController {
 
     };
 
-
-    login = async (
+    updateWorkspaceMember = async (
         req: Request,
         res: Response,
         next: NextFunction
@@ -53,10 +47,12 @@ export class AuthController {
         try {
 
             const result =
-                await this.authService.login(
+                await this.workspaceMembersService.updateWorkspaceMember(
+                    req.user.id,
+                    Number(req.params.workspaceId),
+                    Number(req.params.memberId),
                     req.body
                 );
-
 
             return res.status(200).json({
 
@@ -75,7 +71,7 @@ export class AuthController {
     };
 
 
-    refreshToken = async (
+    deleteWorkspaceMember = async (
         req: Request,
         res: Response,
         next: NextFunction
@@ -83,17 +79,17 @@ export class AuthController {
 
         try {
 
-            const result =
-                await this.authService.refreshtoken(
-                    req.body
-                );
-
+            await this.workspaceMembersService.deleteWorkspaceMember(
+                req.user.id,
+                Number(req.params.workspaceId),
+                Number(req.params.memberId)
+            );
 
             return res.status(200).json({
 
                 success: true,
 
-                data: result
+                message: "Workspace member deleted"
 
             });
 
@@ -104,36 +100,4 @@ export class AuthController {
         }
 
     };
-
-
-    logout = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
-
-        try {
-
-            const result =
-                await this.authService.logout(
-                    req.body
-                );
-
-
-            return res.status(200).json({
-
-                success: true,
-
-                data: result
-
-            });
-
-        } catch (error) {
-
-            next(error);
-
-        }
-
-    };
-
 }

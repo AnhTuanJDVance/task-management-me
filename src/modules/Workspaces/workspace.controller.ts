@@ -1,4 +1,5 @@
 import {
+    NextFunction,
     Request,
     Response
 } from "express";
@@ -13,7 +14,8 @@ export class WorkspaceController {
 
     createWorkspace = async (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) => {
 
         try {
@@ -34,21 +36,17 @@ export class WorkspaceController {
 
         } catch (error) {
 
-            return res.status(400).json({
-
-                success: false,
-
-                message: (error as Error).message
-
-            });
+            next(error);
 
         }
 
     };
 
+
     getMyWorkspaces = async (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) => {
 
         try {
@@ -68,31 +66,24 @@ export class WorkspaceController {
 
         } catch (error) {
 
-            return res.status(400).json({
-
-                success: false,
-
-                message: (error as Error).message
-
-            });
+            next(error);
 
         }
 
     };
 
+
     getWorkspaceById = async (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) => {
 
         try {
 
-            const workspaceId =
-                Number(req.params.id);
-
             const result =
                 await this.workspaceService.findWorkspaceById(
-                    workspaceId,
+                    Number(req.params.id),
                     req.user.id
                 );
 
@@ -106,33 +97,24 @@ export class WorkspaceController {
 
         } catch (error) {
 
-            return res.status(400).json({
-
-                success: false,
-
-                message: (error as Error).message
-
-            });
+            next(error);
 
         }
 
     };
 
 
-
     updateWorkspace = async (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) => {
 
         try {
 
-            const workspaceId =
-                Number(req.params.id);
-
             const result =
                 await this.workspaceService.updateWorkspace(
-                    workspaceId,
+                    Number(req.params.id),
                     req.user.id,
                     req.body
                 );
@@ -147,32 +129,23 @@ export class WorkspaceController {
 
         } catch (error) {
 
-            return res.status(400).json({
-
-                success: false,
-
-                message: (error as Error).message
-
-            });
+            next(error);
 
         }
 
     };
 
 
-
     deleteWorkspace = async (
         req: Request,
-        res: Response
+        res: Response,
+        next: NextFunction
     ) => {
 
         try {
 
-            const workspaceId =
-                Number(req.params.id);
-
             await this.workspaceService.deleteWorkspace(
-                workspaceId,
+                Number(req.params.id),
                 req.user.id
             );
 
@@ -186,13 +159,7 @@ export class WorkspaceController {
 
         } catch (error) {
 
-            return res.status(400).json({
-
-                success: false,
-
-                message: (error as Error).message
-
-            });
+            next(error);
 
         }
 

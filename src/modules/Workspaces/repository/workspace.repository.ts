@@ -100,6 +100,11 @@ export class WorkspaceRepository {
         "members"
       )
 
+      .leftJoinAndSelect(
+        "members.user",
+        "user"
+      )
+
       .where(
         "workspace.id = :workspaceId",
         { workspaceId }
