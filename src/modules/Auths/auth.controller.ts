@@ -26,10 +26,11 @@ export class AuthController {
                     req.body
                 );
 
-
             return res.status(201).json({
 
                 success: true,
+
+                message: "User registered successfully",
 
                 data: result
 
@@ -57,10 +58,11 @@ export class AuthController {
                     req.body
                 );
 
-
             return res.status(200).json({
 
                 success: true,
+
+                message: "Login successful",
 
                 data: result
 
@@ -88,10 +90,11 @@ export class AuthController {
                     req.body
                 );
 
-
             return res.status(200).json({
 
                 success: true,
+
+                message: "Token refreshed successfully",
 
                 data: result
 
@@ -119,10 +122,11 @@ export class AuthController {
                     req.body
                 );
 
-
             return res.status(200).json({
 
                 success: true,
+
+                message: "Logout successful",
 
                 data: result
 
@@ -131,6 +135,72 @@ export class AuthController {
         } catch (error) {
 
             next(error);
+
+        }
+
+    };
+
+
+    forgotPassword = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+
+        try {
+
+            const result =
+                await this.authService
+                    .forgotPassword(
+                        req.body
+                    );
+
+            return res.status(200).json({
+
+                success: true,
+
+                message: "Password reset OTP sent successfully",
+
+                data: result
+
+            });
+
+        } catch (err) {
+
+            next(err);
+
+        }
+
+    };
+
+
+    resetPassword = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+
+        try {
+
+            const result =
+                await this.authService
+                    .resetPassword(
+                        req.body
+                    );
+
+            return res.status(200).json({
+
+                success: true,
+
+                message: "Password reset successfully",
+
+                data: result
+
+            });
+
+        } catch (err) {
+
+            next(err);
 
         }
 

@@ -1,22 +1,40 @@
 import {
-  Request,
-  Response,
-  NextFunction
+    Request,
+    Response,
+    NextFunction
 } from "express";
 
-export const errorHandler = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
+import { AppError } from "../common/errors/AppError";
+
+export const errorMiddleware = (
+    error: unknown,
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
 
-  return res.status(500).json({
+    if (error instanceof AppError) {
 
-    success: false,
+        return res.status(
+            error.statusCode
+        ).json({
 
-    message: err.message
+            success: false,
 
-  });
+            message: error.message
+
+        });
+
+    }
+
+    console.error(error);
+
+    return res.status(500).json({
+
+        success: false,
+
+        message: "Internal server error"
+
+    });
 
 };

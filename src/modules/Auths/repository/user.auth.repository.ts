@@ -9,6 +9,20 @@ export class UserRepository {
   private repository =
     AppDataSource.getRepository(User);
 
+  async updatePassword(
+    id: number,
+    password: string
+  ) {
+
+    await this.repository.update(
+      id,
+      {
+        password
+      }
+    );
+
+  }
+
   async findByEmail(
     email: string
   ) {

@@ -18,6 +18,7 @@ import { Label } from "./Label";
 
 import { TaskStatus } from "../common/enums/task-status.enum";
 import { TaskPriority } from "../common/enums/task-priority.enum";
+import { Attachment } from "./Attachment";
 
 
 @Entity()
@@ -129,6 +130,12 @@ export class Task {
     )
     @JoinTable()
     labels: Label[];
+
+    @OneToMany(
+        () => Attachment,
+        attachment => attachment.task
+    )
+    attachments: Attachment[];
 
 
     @CreateDateColumn()

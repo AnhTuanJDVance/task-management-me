@@ -8,6 +8,11 @@ import {
     verifyAccessToken
 } from "../common/utils/jwt";
 
+import {
+    AppError
+} from "../common/errors/AppError";
+
+
 export const authenticate = (
     req: Request,
     res: Response,
@@ -20,46 +25,49 @@ export const authenticate = (
 
     if (!authorization) {
 
-        return res.status(401).json({
-
-            success: false,
-
-            message: "Authorization header is required"
-
-        });
+        return next(
+            new AppError(
+                "Authorization header is required",
+                401
+            )
+        );
 
     }
+
 
     const [
         type,
         token
     ] = authorization.split(" ");
 
+
     if (
         type !== "Bearer" ||
         !token
     ) {
 
-        return res.status(401).json({
-
-            success: false,
-
-            message: "Invalid authorization header"
-
-        });
+        return next(
+            new AppError(
+                "Invalid authorization header",
+                401
+            )
+        );
 
     }
+
 
     try {
 
         const payload =
             verifyAccessToken(token);
 
+
         req.user = {
 
-            id: payload.userId,
+            id: payload.userId
 
         };
+
 
         next();
 

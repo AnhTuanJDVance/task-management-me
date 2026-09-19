@@ -23,6 +23,11 @@ import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
 import { refreshTokenDto } from "./dto/refresh-token.dto";
 import { LogOutDto } from "./dto/log-out.dto";
+import { RabbitMQService } from "../../common/rabbitmq/rabbitmq.service";
+import { redisClient } from "../../common/redis/redis";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
+import { MailTemplate } from "../../common/templates/mail.template";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 
 
 export class AuthService {
@@ -33,6 +38,134 @@ export class AuthService {
     private refreshTokenRepository =
         new RefreshTokenRepository();
 
+    generateOTP(): string {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    async resetPassword(
+        data: ResetPasswordDto
+    ) {
+
+        const user =
+            await this.userRepository.findByEmail(
+                data.email
+            );
+
+        if (!user) {
+
+            throw new AppError(
+                "User not found",
+                404
+            );
+
+        }
+
+        const redisOtp =
+            await redisClient.get(
+                `forgot-password:${data.email}`
+            );
+
+        if (!redisOtp) {
+
+            throw new AppError(
+                "OTP has expired",
+                400
+            );
+
+        }
+
+        if (redisOtp !== data.otp) {
+
+            throw new AppError(
+                "OTP is incorrect",
+                400
+            );
+
+        }
+
+        const hashedPassword =
+            await hashPassword(
+                data.newPassword
+            );
+
+        await this.userRepository.updatePassword(
+            user.id,
+            hashedPassword
+        );
+
+        await redisClient.del(
+            `forgot-password:${data.email}`
+        );
+
+        return {
+            message: "Password reset successfully"
+        };
+
+    }
+
+    async forgotPassword(
+        data: ForgotPasswordDto
+    ) {
+
+        const user =
+            await this.userRepository.findByEmail(
+                data.email
+            );
+
+        if (!user) {
+
+            throw new AppError(
+                "User not found",
+                404
+            );
+
+        }
+
+        const otp =
+            this.generateOTP();
+
+        await redisClient.set(
+
+            `forgot-password:${data.email}`,
+
+            otp,
+
+            {
+                EX: 60 * 5
+            }
+
+        );
+
+        await RabbitMQService.publish(
+
+            "send-email",
+
+            {
+
+                to: data.email,
+
+                subject: "Forgot Password",
+
+                html: MailTemplate.forgotPassword(
+
+                    user.fullName,
+
+                    otp
+
+                )
+
+            }
+
+        );
+
+        return {
+
+            message:
+                "OTP has been sent successfully"
+
+        };
+
+    }
 
     async register(
         data: RegisterDto

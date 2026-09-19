@@ -12,7 +12,9 @@
     "strictPropertyInitialization": false,
 
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    "outDir": "./dist"
   },
   "include": [
     "src/**/*.ts",

@@ -33,7 +33,6 @@ export class Workspace {
   )
   members: WorkspaceMember[];
 
-
   @OneToMany(
     () => Project,
     (project) => project.workspace

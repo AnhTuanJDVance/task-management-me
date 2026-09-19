@@ -11,6 +11,8 @@ import {
 
 import { Workspace } from "./Workspace";
 import { Task } from "./Task";
+import { Conversation } from "../modules/Chat/entity/conversation.entity";
+import { Attachment } from "./Attachment";
 
 
 @Entity()
@@ -19,10 +21,13 @@ export class Project {
     @PrimaryGeneratedColumn()
     id: number;
 
-
     @ManyToOne(
         () => Workspace,
-        (workspace) => workspace.projects
+        (workspace) => workspace.projects,
+        {
+            nullable: false,
+            onDelete: "CASCADE"
+        }
     )
     workspace: Workspace;
 
@@ -47,6 +52,17 @@ export class Project {
     })
     description: string;
 
+    @OneToMany(
+        () => Conversation,
+        conversation => conversation.project
+    )
+    conversations: Conversation[];
+
+    @OneToMany(
+        () => Attachment,
+        attachment => attachment.project
+    )
+    attachments: Attachment[];
 
     @CreateDateColumn()
     createdAt: Date;

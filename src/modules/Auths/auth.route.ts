@@ -6,7 +6,9 @@ import { validate } from "../../middlewares/validate.middleware";
 
 import {
     registerSchema,
-    loginSchema
+    loginSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema
 } from "./auth.validation";
 
 const router = Router();
@@ -51,6 +53,22 @@ router.post(
     "/logout",
 
     authController.logout
+
+);
+
+router.post(
+
+    "/forgot-password",
+
+    authController.forgotPassword
+
+);
+
+router.post(
+
+    "/reset-password",
+
+    authController.resetPassword
 
 );
 

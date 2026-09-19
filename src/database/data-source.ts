@@ -12,6 +12,9 @@ import { User } from "../entities/User";
 import { Workspace } from "../entities/Workspace";
 import { WorkspaceMember } from "../entities/WorkspaceMember";
 import { RefreshToken } from "../entities/RefreshToken";
+import { ConversationMember } from "../modules/Chat/entity/conversation-member.entity";
+import { Conversation } from "../modules/Chat/entity/conversation.entity";
+import { Message } from "../modules/Chat/entity/message";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -31,7 +34,10 @@ export const AppDataSource = new DataSource({
     User,
     Workspace,
     WorkspaceMember,
-    RefreshToken
+    RefreshToken,
+    ConversationMember,
+    Conversation,
+    Message
   ],
   synchronize: true,
   
