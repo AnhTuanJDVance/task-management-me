@@ -1,0 +1,236 @@
+# Task Management Backend
+
+Backend API cho hệ thống quản lý công việc, xây dựng bằng Node.js và TypeScript theo kiến trúc Controller → Service → Repository.
+
+## 🚀 Tech Stack
+
+* Node.js
+* TypeScript
+* Express.js
+* PostgreSQL
+* TypeORM
+* JWT
+* Redis
+* RabbitMQ
+* Socket.IO
+* Zod
+* Multer
+* Docker
+
+## ✨ Features
+
+### Authentication & Authorization
+
+* User registration
+* User login
+* Access token / Refresh token
+* Logout
+* Forgot password with OTP
+* Reset password
+* JWT authentication middleware
+* Workspace-based authorization
+
+### Workspace & Project Management
+
+* Workspace membership
+* Create project
+* Get projects by workspace
+* Get project details
+* Update project
+* Delete project
+* Workspace member authorization
+
+### Task Management
+
+* Create and manage tasks
+* Task status and priority
+* Task assignment
+* Due date / start date
+* Estimated working hours
+* Task position
+* Comments and labels support
+
+### File Attachments
+
+* Upload files with Multer
+* Project-level attachments
+* Task-level attachments
+* List attachments by project
+* List attachments by task
+* Authenticated file download
+* Attachment deletion
+* Workspace-based access control
+
+### Real-time Chat
+
+* Direct conversations
+* Group conversations
+* Join / leave conversation rooms
+* Send direct messages
+* Send group messages
+* Retrieve group messages
+* Real-time messaging with Socket.IO
+
+### Infrastructure
+
+* Redis for temporary data and OTP storage
+* RabbitMQ for asynchronous message processing
+* Mail worker for asynchronous email delivery
+* Docker / Docker Compose
+* Centralized error handling
+* Request validation with Zod
+
+## 🏗️ Project Structure
+
+```text
+src/
+├── common/
+│   ├── enums/
+│   ├── errors/
+│   ├── rabbitmq/
+│   ├── redis/
+│   ├── templates/
+│   ├── upload/
+│   └── utils/
+│
+├── config/
+├── database/
+├── entities/
+├── middlewares/
+│
+├── modules/
+│   ├── Attachment/
+│   ├── Auths/
+│   ├── Chat/
+│   ├── Projects/
+│   └── Tasks/
+│
+└── socket/
+```
+
+## 🔐 Architecture
+
+The project follows a clean layered structure:
+
+```text
+Route
+  ↓
+Middleware
+  ↓
+Controller
+  ↓
+Service
+  ↓
+Repository
+  ↓
+Database
+```
+
+Responsibilities are separated between:
+
+* **Controller** — handles HTTP request/response
+* **Middleware** — authentication and validation
+* **Service** — business logic
+* **Repository** — database operations
+* **DTO** — request data structure
+* **Entity** — database models
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+PORT=3000
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+DB_NAME=task_management
+
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+
+RABBITMQ_URL=amqp://localhost:5672
+
+EMAIL_USER=your_email
+EMAIL_PASSWORD=your_email_password
+```
+
+Do not commit `.env` to the repository.
+
+## ▶️ Installation
+
+Clone the repository and install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Build the project:
+
+```bash
+npm run build
+```
+
+Run the compiled application:
+
+```bash
+npm start
+```
+
+## 🐳 Docker
+
+The project includes Docker configuration for running the development environment and supporting services.
+
+```bash
+docker compose up -d
+```
+
+Check running containers:
+
+```bash
+docker ps
+```
+
+## 📡 API
+
+The main API modules include:
+
+```text
+/api/auth
+/api/projects
+/api/tasks
+/api/attachments
+```
+
+Real-time communication is handled through Socket.IO.
+
+## 🔒 Security
+
+The backend includes:
+
+* Password hashing
+* JWT authentication
+* Refresh token mechanism
+* OTP expiration through Redis
+* Workspace-level authorization
+* Request validation
+* Centralized error handling
+* Helmet
+* CORS configuration
+
+## 📌 Project Status
+
+This project is currently a completed backend-focused portfolio project.
+
+The implementation focuses on practical backend development, authentication, authorization, database relationships, asynchronous processing, real-time communication and file handling.
