@@ -1,6 +1,3 @@
-# Task Management Backend
-
-Backend API cho hệ thống quản lý công việc, xây dựng bằng Node.js và TypeScript theo kiến trúc Controller → Service → Repository.
 
 ## 🚀 Tech Stack
 
